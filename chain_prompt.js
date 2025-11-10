@@ -8,7 +8,7 @@
  */
 function toKebabCase(input) {
     if (input === null || input === undefined || typeof input !== 'string') {
-        return new Error('Invalid input: expected a non-null string.');
+        throw new Error('Invalid input: expected a non-null string.');
     }
 
     // Collapse consecutive whitespace, trim ends, replace spaces with hyphens, and lowercase.
