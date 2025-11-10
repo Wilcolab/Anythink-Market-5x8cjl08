@@ -1,0 +1,43 @@
+/**
+ * Convert text to snake_case.
+ * Examples:
+ *   toSnakeCase('HelloWorld') -> 'hello_world'
+ *   toSnakeCase('  Foo-Bar baz ') -> 'foo_bar_baz'
+ */
+function toSnakeCase(input) {
+    if (input == null) return '';
+    let s = String(input).trim();
+    if (!s) return '';
+    // Normalize and remove diacritics
+    if (s.normalize) s = s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    // Split camelCase boundaries: "fooBar" -> "foo Bar"
+    s = s.replace(/([a-z0-9])([A-Z])/g, '$1 $2');
+    // Replace non-alphanumeric characters with spaces
+    s = s.replace(/[^A-Za-z0-9]+/g, ' ');
+    // Lowercase and join with underscores
+    const parts = s.toLowerCase().split(/\s+/).filter(Boolean);
+    return parts.join('_');
+}
+
+module.exports = { toSnakeCase };
+
+// CLI usage: node <file> "Some Text Here" -> some_text_here
+if (require.main === module) {
+    const input = process.argv.slice(2).join(' ');
+    console.log(toSnakeCase(input));
+}
+
+
+function addNumbers(a, b) {
+    if (a === null || a === undefined || b === null || b === undefined) {
+        throw new TypeError('addNumbers: both arguments are required and must be numbers');
+    if (typeof a !== 'number' || typeof b !== 'number') {
+        throw new TypeError(`addNumbers: both arguments must be numbers. Received ${typeof a} and ${typeof b}`);
+    }
+    if (!Number.isFinite(a) || !Number.isFinite(b)) {
+        throw new TypeError('addNumbers: arguments must be finite numbers');
+    }
+    return a + b;
+}
+
+module.exports.addNumbers = addNumbers;
