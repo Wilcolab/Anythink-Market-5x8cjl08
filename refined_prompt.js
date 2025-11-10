@@ -104,17 +104,54 @@
  * @see toCamelCase
  */
 
-    // If the string contains separators, split on any non-alphanumeric sequence.
-    const hasSeparators = /[^A-Za-z0-9]+/.test(str);
-    let parts = [];
-
-    if (hasSeparators) {
-        parts = str.split(/[^A-Za-z0-9]+/).filter(Boolean);
-    } else {
-        // Split camelCase, PascalCase, acronyms, and numbers into logical tokens.
-        // Matches:
-        //  - consecutive uppercase letters followed by an uppercase+lowercase (acronym before normal word)
-        //  - optional single uppercase + lowercase sequence
+    /**
+     * Convert an arbitrary string into lower camelCase (example: "firstName").
+     *
+     * @param {string} input - The string to convert to camelCase.
+     * @returns {string} A lower camelCase representation of the input string.
+     * @throws {TypeError} If input is null or undefined, or if input is not of type string.
+     */
+    function toCamelCase(input) {
+        if (input === null || input === undefined) {
+            throw new TypeError('toCamelCase: input must be a string, received null/undefined');
+        }
+        if (typeof input !== 'string') {
+            throw new TypeError(`toCamelCase: expected string but received ${typeof input}`);
+        }
+    
+        const str = input.trim();
+        if (str === '') return '';
+    
+        // If the string contains separators, split on any non-alphanumeric sequence.
+        const hasSeparators = /[^A-Za-z0-9]+/.test(str);
+        let parts = [];
+    
+        if (hasSeparators) {
+            parts = str.split(/[^A-Za-z0-9]+/).filter(Boolean);
+        } else {
+            // Split camelCase, PascalCase, acronyms, and numbers into logical tokens.
+            // Matches:
+            //  - consecutive uppercase letters followed by an uppercase+lowercase (acronym before normal word)
+            //  - optional single uppercase + lowercase sequence
+            //  - consecutive uppercase letters (acronyms at end)
+            //  - numbers
+            const tokenRe = /([A-Z]+(?=[A-Z][a-z]))|([A-Z]?[a-z]+)|([A-Z]+)|([0-9]+)/g;
+            parts = str.match(tokenRe) || [str];
+        }
+    
+        if (parts.length === 0) return '';
+    
+        const lower = (s) => s.toLowerCase();
+        const capitalize = (s) => (s.length === 0 ? '' : s[0].toUpperCase() + s.slice(1).toLowerCase());
+    
+        const first = lower(parts[0]);
+        const rest = parts
+            .slice(1)
+            .map((p) => (/^[0-9]+$/.test(p) ? p : capitalize(p)))
+            .join('');
+    
+        return first + rest;
+    }
         //  - consecutive uppercase letters (acronyms at end)
         //  - numbers
         const tokenRe = /([A-Z]+(?=[A-Z][a-z]))|([A-Z]?[a-z]+)|([A-Z]+)|([0-9]+)/g;
@@ -133,7 +170,7 @@
         .join('');
 
     return first + rest;
-
+}
 
 export default toCamelCase;
 

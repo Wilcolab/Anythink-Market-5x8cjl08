@@ -1,6 +1,6 @@
 /**
  * Convert a string to kebab-case (spaces → hyphens, all lowercase).
- * Returns an Error object for invalid input (null/undefined/non-string).
+ * Throws an Error object for invalid input (null/undefined/non-string).
  *
  * Example:
  *   toKebabCase("Hello World") // "hello-world"

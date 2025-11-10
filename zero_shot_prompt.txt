@@ -27,16 +27,10 @@ if (require.main === module) {
     console.log(toSnakeCase(input));
 }
 
-function addNumbers(a, b) {
-    return Number(a) + Number(b);
-}
-
-module.exports.addNumbers = addNumbers;
 
 function addNumbers(a, b) {
     if (a === null || a === undefined || b === null || b === undefined) {
         throw new TypeError('addNumbers: both arguments are required and must be numbers');
-    }
     if (typeof a !== 'number' || typeof b !== 'number') {
         throw new TypeError(`addNumbers: both arguments must be numbers. Received ${typeof a} and ${typeof b}`);
     }

@@ -26,5 +26,5 @@ function toCamelCase(str) {
 // CommonJS export
 module.exports = { toCamelCase };
 
-// ES Module default export (if used in ESM environments)
+// If you are using ES Modules, uncomment the following line:
 // export default toCamelCase;
