@@ -94,6 +94,72 @@ describe('Arithmetic', function () {
     });
 
 // TODO: Challenge #1
+describe('Power', function () {
+    it('raises a positive integer to a positive integer exponent', function (done) {
+        request.get('/arithmetic?operation=power&operand1=2&operand2=5')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body).to.eql({ result: 32 });
+                done();
+            });
+    });
+    it('raises a number to the zero exponent', function (done) {
+        request.get('/arithmetic?operation=power&operand1=5&operand2=0')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body).to.eql({ result: 1 });
+                done();
+            });
+    });
+    it('raises zero to a positive exponent', function (done) {
+        request.get('/arithmetic?operation=power&operand1=0&operand2=5')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body).to.eql({ result: 0 });
+                done();
+            });
+    });
+    it('raises to a negative exponent producing a fractional result', function (done) {
+        request.get('/arithmetic?operation=power&operand1=2&operand2=-5')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body).to.eql({ result: 0.03125 });
+                done();
+            });
+    });
+    it('raises a fractional base to an integer exponent', function (done) {
+        request.get('/arithmetic?operation=power&operand1=2.5&operand2=2')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body).to.eql({ result: 6.25 });
+                done();
+            });
+    });
+    it('handles negative base with odd integer exponent', function (done) {
+        request.get('/arithmetic?operation=power&operand1=-2&operand2=3')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body).to.eql({ result: -8 });
+                done();
+            });
+    });
+    it('handles negative base with even integer exponent', function (done) {
+        request.get('/arithmetic?operation=power&operand1=-2&operand2=2')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body).to.eql({ result: 4 });
+                done();
+            });
+    });
+    it('supports exponential notation for operands', function (done) {
+        request.get('/arithmetic?operation=power&operand1=1e1&operand2=2')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.body).to.eql({ result: 100 });
+                done();
+            });
+    });
+});
  
 
     describe('Multiplication', function () {
