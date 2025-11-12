@@ -1,39 +1,82 @@
-# Python Server
+# Anythink Market — Dev Services
 
-This project contains a FastAPI server implemented in Python. It provides two routes for managing a task list.
+This workspace contains two simple development services:
 
-## Project Structure
+- Python FastAPI service (python-server) — listens on port 8000
+  - Source: python-server/src/main.py
+- Node Express service (node-server) — listens on port 8001
+  - Source: node-server/src/index.js
+  - Uses nodemon for live reload (yarn start / npm run start runs nodemon)
 
-The project has the following files and directories:
+A docker-compose.yml is provided to run both services together for development.
 
-- `python-server/src/main.py`: This file contains the implementation of the FastAPI server with two routes. It handles adding a task to a list and retrieving the list.
+## Quick start (recommended — Docker Compose)
 
-- `python-server/src/__init__.py`: This file is an empty file that marks the `src` directory as a Python package.
+1. From repository root:
+   - docker-compose up --build
+2. Access:
+   - Python API: http://localhost:8000
+   - Node API: http://localhost:8001
+3. Run in background:
+   - docker-compose up -d --build
+4. Stop and remove:
+   - docker-compose down
 
-- `python-server/requirements.txt`: This file lists the dependencies required for the FastAPI server and other dependencies.
+## Local development (without Docker)
 
-- `python-server/Dockerfile`: This file is used to build a Docker image for the FastAPI server. It specifies the base image, copies the source code into the image, installs the dependencies, and sets the command to run the server.
+Node service:
+1. cd node-server
+2. Install deps:
+   - npm install
+   - or yarn
+3. Start dev server (nodemon):
+   - npm run start
+   - or yarn start
+4. Visit: http://localhost:8001
 
-- `docker-compose.yml`: This file is used to define and run multi-container Docker applications. It specifies the services to run, their configurations, and any dependencies between them.
+Python service:
+1. cd python-server
+2. (optional) venv:
+   - python3 -m venv .venv && source .venv/bin/activate
+3. Install:
+   - pip install -r requirements.txt
+4. Start dev server:
+   - uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+5. Visit: http://localhost:8000
 
-## Getting Started
+## Docker (individual services)
 
-To run the FastAPI server using Docker, follow these steps:
+Node:
+- docker build -t node-server ./node-server
+- docker run -p 8001:8001 node-server
 
-- Build and start the Docker containers by running the following command:
+Python:
+- docker build -t python-server ./python-server
+- docker run -p 8000:8000 python-server
 
-  ```shell
-  docker compose up
-  ```
+## Notes & tips
 
-  This command will build the Docker image for the FastAPI server and start the containers defined in the `docker-compose.yml` file.
+- The Node endpoints are direct translations of the FastAPI routes:
+  - GET / -> "Hello World"
+  - GET /tasks -> returns task list
+  - POST /tasks -> accepts JSON { "text": "..." } and appends to list
+- Use nodemon (start script) plus docker-compose volume mounts on node-server/src for live reload.
+- Avoid overwriting node_modules in the container when mounting; mount only src or use a named volume for /usr/src/app/node_modules.
 
-- The FastAPI server should now be running. You can access at port `8000`.
+## Project layout
 
-## API Routes
+- docker-compose.yml
+- python-server/
+  - Dockerfile
+  - src/main.py
+  - requirements.txt
+- node-server/
+  - Dockerfile
+  - package.json
+  - nodemon.json
+  - src/index.js
 
-The FastAPI server provides the following API routes:
+## Troubleshooting
 
-- `POST /tasks`: Adds a task to the task list. The request body should contain the task details.
-
-- `GET /tasks`: Retrieves the task list.
+- If docker-compose fails due to permissions or daemon issues, confirm Docker is running inside the dev container and that the container has access to the Docker socket.
+- Use docker-compose logs <service> to inspect logs.
