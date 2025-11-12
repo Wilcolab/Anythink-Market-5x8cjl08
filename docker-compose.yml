@@ -16,5 +16,11 @@ services:
       - "8001:8001"
     volumes:
       - ./node-server/src:/usr/src/app/src
+      # if you want to preserve node_modules from image, do NOT mount the whole project root:
+      - /usr/src/app/node_modules
+    working_dir: /usr/src/app
+    environment:
+      - NODE_ENV=development
+    command: ["yarn", "start"]
     depends_on:
       - python-server
