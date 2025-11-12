@@ -1,19 +1,19 @@
-FROM node:14
+FROM node:18-alpine
 
 # Set the working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and yarn.lock
-COPY package*.json /usr/src/app/
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json* ./
 
 # Install dependencies
-RUN yarn install
+RUN npm install
 
 # Copy the rest of the application code
-COPY . .
+COPY src ./src
 
 # Expose the port the app runs on
 EXPOSE 8001
 
 # Command to run the application
-CMD ["yarn", "start"]
+CMD ["npm", "run", "start"]
