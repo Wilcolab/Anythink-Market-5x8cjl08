@@ -7,3 +7,14 @@ services:
       - 8000:8000
     volumes:
       - ./python-server/src:/app/src
+
+  node-server:
+    build:
+      context: ./node-server
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./node-server/src:/usr/src/app/src
+    depends_on:
+      - python-server
